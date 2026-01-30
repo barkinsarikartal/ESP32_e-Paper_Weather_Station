@@ -186,8 +186,8 @@ void drawDashboardUI() {
     display.print("C");
 
     display.setTextColor(GxEPD_BLACK);
-    display.setFont(&FreeSansBold9pt7b);
-    display.setCursor(5, 100); 
+    display.setFont(NULL);
+    display.setCursor(5, 90); 
     display.print(weatherDesc);
 
     // Grid
