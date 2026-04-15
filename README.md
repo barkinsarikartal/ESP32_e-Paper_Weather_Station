@@ -3,7 +3,7 @@
 A low-power, minimalist weather station powered by an ESP32-Wroom-32U and a Waveshare 1.54" e-Paper display. This project fetches real-time weather data from the OpenWeatherMap API and displays it on a crisp, tri-color (Red/Black/White) e-Ink screen.
 
 <div align="center">
-  <img src="showcase.jpg" width="500" alt="Project Showcase">
+  <img src="images/closed_3.jpg" width="500" alt="Project Showcase">
 </div>
 
 ## Features
@@ -21,30 +21,72 @@ A low-power, minimalist weather station powered by an ESP32-Wroom-32U and a Wave
 * **Display:** Waveshare 1.54inch e-Paper Module (B) V2 (SSD1680 Driver)
 * **Connection:** SPI Interface
 
+## Optional: 3D Printed Enclosure
+
+To use this project with its custom 3D printed enclosure, you will need the following additional materials:
+* **Charger IC:** TP4056 with Type-C Connection
+* **Battery:** 18650 Li-ion Rechargable Battery (With a Single Cell Battery Holder)
+* **Step-Up Boost Converter:** MT3608 Adjustable DC-DC Boost Power Converter
+* **Hardware:** 4x M3x5.75 Brass Inserts, 4x M3 Screws Up to 8mm in Length
+
+> **Note:** The brass inserts must be inserted into the 3D printed box using a soldering iron. Double-sided tape was used to secure the components inside the box.
+> 
+> **Battery Status:** There is currently no battery level measurement in this project. I started with a fully charged 1500 mAh 18650 battery. Once it completely drains, I will update this README to document how long the battery lasts. You can check if the battery is fully charged by observing the TP4056 LEDs visible through the Type-C port gap: when the red LED turns off and the blue LED turns on, the battery is fully charged.
+
+The 3D models were designed using OpenSCAD with the help of Google Gemini. You can find the 3D files in the `/3D` folder of this repository, which includes:
+* `box.scad` / `box.stl`: The main body/box of the enclosure.
+* `lid.scad` / `lid.stl`: The front cover/lid of the enclosure.
+* `print.3mf`: A ready-to-print project file containing both parts.
+
+Alternatively, you can check them out and download them directly from [MakerWorld](https://makerworld.com/tr/models/2665507-weather-station-with-esp32-and-waveshare-e-paper#profileId-2949378).
+
+Before Connecting Components to the 3D Box:
+<div align="center">
+  <img src="images/box_1.jpg" width="32%">
+  <img src="images/box_2.jpg" width="32%">
+  <img src="images/box_3.jpg" width="32%">
+</div>
+<div align="center">
+  <img src="images/box_4.jpg" width="32%">
+  <img src="images/box_5.jpg" width="32%">
+  <img src="images/box_6.jpg" width="32%">
+</div>
+
+<br>
+
+After Connecting Components to the 3D Box:
+<div align="center">
+  <img src="images/closed_1.jpg" width="48%">
+  <img src="images/closed_2.jpg" width="48%">
+</div>
+<div align="center">
+  <img src="images/closed_3.jpg" width="48%">
+  <img src="images/closed_4.jpg" width="48%">
+</div>
+
 ## Wiring Diagram
 
 Connect the e-Paper HAT to the ESP32 pins as defined in `config.h`:
 
-<table>
-  <tr>
-    <td width="50%" valign="middle">
-      <img src="connections.png" alt="Wiring Diagram" width="100%">
-    </td>
-    <td width="50%" valign="middle">
-      <table border="0">
-        <tr><th>e-Paper Pin</th><th>ESP32 Pin</th><th>Function</th></tr>
-        <tr><td><b>VCC</b></td><td><b>3.3V</b></td><td>Power</td></tr>
-        <tr><td><b>GND</b></td><td><b>GND</b></td><td>Ground</td></tr>
-        <tr><td><b>DIN</b></td><td><b>GPIO 23</b></td><td>MOSI</td></tr>
-        <tr><td><b>CLK</b></td><td><b>GPIO 18</b></td><td>SCK</td></tr>
-        <tr><td><b>CS</b></td><td><b>GPIO 5</b></td><td>Chip Select</td></tr>
-        <tr><td><b>DC</b></td><td><b>GPIO 17</b></td><td>Data/Cmd</td></tr>
-        <tr><td><b>RST</b></td><td><b>GPIO 16</b></td><td>Reset</td></tr>
-        <tr><td><b>BUSY</b></td><td><b>GPIO 4</b></td><td>Busy Status</td></tr>
-      </table>
-    </td>
-  </tr>
-</table>
+<div align="center">
+  <img src="images/connections.png" alt="Wiring Diagram" width="70%">
+</div>
+
+<br>
+
+<div align="center">
+  <table>
+    <tr><th>e-Paper Pin</th><th>ESP32 Pin</th><th>Function</th></tr>
+    <tr><td><b>VCC</b></td><td><b>3.3V</b></td><td>Power</td></tr>
+    <tr><td><b>GND</b></td><td><b>GND</b></td><td>Ground</td></tr>
+    <tr><td><b>DIN</b></td><td><b>GPIO 23</b></td><td>MOSI</td></tr>
+    <tr><td><b>CLK</b></td><td><b>GPIO 18</b></td><td>SCK</td></tr>
+    <tr><td><b>CS</b></td><td><b>GPIO 5</b></td><td>Chip Select</td></tr>
+    <tr><td><b>DC</b></td><td><b>GPIO 17</b></td><td>Data/Cmd</td></tr>
+    <tr><td><b>RST</b></td><td><b>GPIO 16</b></td><td>Reset</td></tr>
+    <tr><td><b>BUSY</b></td><td><b>GPIO 4</b></td><td>Busy Status</td></tr>
+  </table>
+</div>
 
 ## Dependencies
 
