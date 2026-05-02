@@ -1,6 +1,6 @@
 # ESP32 e-Paper Weather Station
 
-A low-power, minimalist weather station powered by an ESP32-Wroom-32U and a Waveshare 1.54" e-Paper display. This project fetches real-time weather data from the OpenWeatherMap API and displays it on a crisp, tri-color (Red/Black/White) e-Ink screen.
+A low-power, minimalist weather station powered by ESP32 and a Waveshare 1.54" e-Paper display. This project fetches real-time weather data from the OpenWeatherMap API and displays it on a crisp, tri-color (Red/Black/White) e-Ink screen.
 
 <div align="center">
   <img src="images/closed_3.jpg" width="500" alt="Project Showcase">
@@ -17,21 +17,23 @@ A low-power, minimalist weather station powered by an ESP32-Wroom-32U and a Wave
 
 ## Hardware Requirements
 
-* **Microcontroller:** ESP32 (Tested on ESP32-WROOM-32U)
+* **Microcontroller:** ESP32 (Tested on ESP32-WROOM-32U and Seeed Studio XIAO ESP32C3)
 * **Display:** Waveshare 1.54inch e-Paper Module (B) V2 (SSD1680 Driver)
 * **Connection:** SPI Interface
 
 ## Optional: 3D Printed Enclosure
 
 To use this project with its custom 3D printed enclosure, you will need the following additional materials:
-* **Charger IC:** TP4056 with Type-C Connection
+* **Charger IC:** TP4056 with Type-C Connection *(Not needed if using XIAO ESP32C3)*
 * **Battery:** 18650 Li-ion Rechargable Battery (With a Single Cell Battery Holder)
-* **Step-Up Boost Converter:** MT3608 Adjustable DC-DC Boost Power Converter
+* **Step-Up Boost Converter:** MT3608 Adjustable DC-DC Boost Power Converter *(Not needed if using XIAO ESP32C3)*
 * **Hardware:** 4x M3x5.75 Brass Inserts, 4x M3 Screws Up to 8mm in Length
 
 > **Note:** The brass inserts must be inserted into the 3D printed box using a soldering iron. Double-sided tape was used to secure the components inside the box.
 > 
-> **Battery Status:** There is currently no battery level measurement in this project. I started with a fully charged 1500 mAh 18650 battery. Once it completely drains, I will update this README to document how long the battery lasts. You can check if the battery is fully charged by observing the TP4056 LEDs visible through the Type-C port gap: when the red LED turns off and the blue LED turns on, the battery is fully charged.
+> **Important for XIAO ESP32C3 Users:** The XIAO ESP32C3 has a built-in battery charging circuit. You can connect your 18650 battery directly to the `BAT+` and `BAT-` pads on the bottom of the XIAO. Because of this, you do NOT need the TP4056 or MT3608 modules!
+>
+> **Battery Status:** There is currently no battery level measurement in this project. I started with a fully charged 1500 mAh 18650 battery. It lasted exactly a week with ESP32-WROOM-32U. I have not tested it with XIAO ESP32C3 yet. You can check if the battery is fully charged by observing the TP4056 LEDs visible through the Type-C port gap: when the red LED turns off and the blue LED turns on, the battery is fully charged.
 
 The 3D models were designed using OpenSCAD with the help of Google Gemini. You can find the 3D files in the `/3D` folder of this repository, which includes:
 * `box.scad` / `box.stl`: The main body/box of the enclosure.
@@ -66,10 +68,12 @@ After Connecting Components to the 3D Box:
 
 ## Wiring Diagram
 
-Connect the e-Paper HAT to the ESP32 pins as defined in `config.h`:
+Connect the e-Paper HAT to your chosen microcontroller as defined in `config.h`. 
+
+### Option A: ESP32-WROOM-32U
 
 <div align="center">
-  <img src="images/connections.png" alt="Wiring Diagram" width="70%">
+  <img src="images/connections_ESP32-WROOM-32U.png" alt="ESP32-WROOM-32U Wiring Diagram" width="70%">
 </div>
 
 <br>
@@ -85,6 +89,28 @@ Connect the e-Paper HAT to the ESP32 pins as defined in `config.h`:
     <tr><td><b>DC</b></td><td><b>GPIO 17</b></td><td>Data/Cmd</td></tr>
     <tr><td><b>RST</b></td><td><b>GPIO 16</b></td><td>Reset</td></tr>
     <tr><td><b>BUSY</b></td><td><b>GPIO 4</b></td><td>Busy Status</td></tr>
+  </table>
+</div>
+
+### Option B: Seeed Studio XIAO ESP32C3
+
+<div align="center">
+  <img src="images/connections_XIAO_ESP32C3.png" alt="XIAO ESP32C3 Wiring Diagram" width="60%">
+</div>
+
+<br>
+
+<div align="center">
+  <table>
+    <tr><th>e-Paper Pin</th><th>XIAO ESP32C3 Pin</th><th>Function</th></tr>
+    <tr><td><b>VCC</b></td><td><b>3.3V</b></td><td>Power</td></tr>
+    <tr><td><b>GND</b></td><td><b>GND</b></td><td>Ground</td></tr>
+    <tr><td><b>DIN</b></td><td><b>GPIO 10 (D10)</b></td><td>MOSI</td></tr>
+    <tr><td><b>CLK</b></td><td><b>GPIO 8 (D8)</b></td><td>SCK</td></tr>
+    <tr><td><b>CS</b></td><td><b>GPIO 20 (D7)</b></td><td>Chip Select</td></tr>
+    <tr><td><b>DC</b></td><td><b>GPIO 21 (D6)</b></td><td>Data/Cmd</td></tr>
+    <tr><td><b>RST</b></td><td><b>GPIO 3 (D1)</b></td><td>Reset</td></tr>
+    <tr><td><b>BUSY</b></td><td><b>GPIO 2 (D0)</b></td><td>Busy Status</td></tr>
   </table>
 </div>
 
@@ -104,7 +130,12 @@ This project requires the following Arduino libraries:
     ```bash
     git clone https://github.com/barkinsarikartal/ESP32_e-Paper_Weather_Station.git
     ```
-2.  **Open `config.h`** and update your credentials:
+2.  **Select Your Board:** Open `ESP32_e-Paper_Weather_Station.ino` and uncomment the board you are using at the top of the file:
+    ```cpp
+    // #define BOARD_ESP32_DEVKIT
+    // #define BOARD_XIAO_ESP32C3
+    ```
+3.  **Update Credentials:** Open `config.h` and update your Wi-Fi and OpenWeatherMap details:
     ```cpp
     // config.h
     const char* WIFI_SSID = "YOUR_WIFI_SSID";
@@ -113,13 +144,14 @@ This project requires the following Arduino libraries:
     // Get your free API key from https://openweathermap.org/
     String OPENWEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?q=CITY,COUNTRY&units=metric&appid=YOUR_API_KEY"; 
     ```
-3.  **Upload:** Connect your ESP32 via USB and upload the code using the Arduino IDE.
+4.  **Upload:** Connect your ESP32 via USB and upload the code using the Arduino IDE.
 
 ## File Structure
 
-* `ESP32_e-Paper_Weather_Station.ino`: Main application logic, deep sleep management, and UI rendering.
+* `ESP32_e-Paper_Weather_Station.ino`: Main application logic, deep sleep management, UI rendering, and board selection.
 * `config.h`: Configuration file for Wi-Fi credentials, API endpoints, pin definitions, and sleep timers.
 * `bitmaps.h`: Contains byte arrays for the custom weather icons (Sun, Clouds, Rain, Snow, etc.).
+* `sketch_ESP32-WROOM-32U.fzz` & `sketch_XIAO_ESP32C3.fzz`: Fritzing wiring diagrams for both boards.
 
 ## Power Consumption Logic
 
