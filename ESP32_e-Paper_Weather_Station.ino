@@ -5,6 +5,10 @@
  * Notes: Please do not forget to change WiFi Credentials and OpenWeather API URL from config.h
  */
 
+// Select a board for your project. Remove the // symbol at the beginning of the board you are using:
+// #define BOARD_ESP32_DEVKIT
+// #define BOARD_XIAO_ESP32C3
+
 #include <GxEPD2_3C.h>
 #include <Fonts/FreeSansBold9pt7b.h>
 #include <Fonts/FreeSansBold12pt7b.h>
@@ -18,7 +22,7 @@
 #include "bitmaps.h"
 
 // Display Constructor for Waveshare 1.54" V2 (https://www.waveshare.com/1.54inch-e-paper-module-b.htm)
-GxEPD2_3C<GxEPD2_154_Z90c, GxEPD2_154_Z90c::HEIGHT> display(GxEPD2_154_Z90c(PIN_CS, PIN_DC, PIN_RST, PIN_BUSY));
+GxEPD2_3C<GxEPD2_154_Z90c, GxEPD2_154_Z90c::HEIGHT> display(GxEPD2_154_Z90c(EPD_CS, EPD_DC, EPD_RST, EPD_BUSY));
 
 // Data Holders
 String cityName, country, weatherDesc, iconCode;
@@ -70,6 +74,7 @@ void setup() {
   if (dataFetched) {
     Serial.println("Data fetched successfully. Updating display.");
 
+    SPI.begin(SPI_SCK, SPI_MISO, SPI_MOSI, EPD_CS);
     display.init(115200);
     display.setRotation(1);
 
